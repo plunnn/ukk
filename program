@@ -1,0 +1,214 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#define MAX 5
+
+typedef struct {
+	char nama[25];
+	int harga;
+	int jumlah;
+	int diskon;
+}Barang;
+   
+   Barang daftarBarang[MAX] = {
+   {"Buku Tulis",5000,0,0},
+   {"Pensil",2000,0,0},
+   {"Penghapus",1000,0,0},
+   {"penggaris",1000,0,0},
+   {"Bujur", 500,0,0}
+   };
+   
+   void tampilanMenu(){
+   	int i;
+   	printf("selamat datang di toko SKENSA \n");
+   	printf("silahkan pilih barang yang anda inginkan: \n");
+   	printf("=========================== \n");
+   	printf("|No.| Barang   | Harga    | \n");
+   	printf("=========================== \n");
+   	for(i=0;i<MAX;i++){
+   		printf("|%d|%-14s|Rp.%4d| \n", i+1, daftarBarang[i].nama,daftarBarang[i].harga);
+   	}
+   	printf("=========================== \n");
+   	printf("99. struk pembelian \n");
+   	printf("55. reset pesanan \n");
+   	printf("00. keluar \n");
+   	printf("=========================== \n");
+   }
+   
+   void resetPesanan(){
+   	int i;
+   	for(i=0;i<MAX;i++){
+   		daftarBarang[i].jumlah = 0;
+   		daftarBarang[i].diskon = 0;
+   	}
+   	printf("pesanan telah direset");
+   }
+   
+   int hitungDiskon (int qty, int harga){
+   	if (qty > 5) return qty * harga * 15/100;
+   	else if (qty > 3) return qty * harga * 10/100;
+   	else return 0;
+   }
+   void clearScreen(){
+   	#ifdef _WIN32
+   	system ("cls");
+   	#else
+   	system ("clear");
+   	#endif
+   }
+   
+      void tekanEnterUntukLanjut(){
+   	printf("tekan enter untuk lanjut");
+   	getchar();
+   	getchar();
+   }
+   
+   void urutkanBarang(){
+   	int i,j;
+   	for(i=0;i<MAX - 1;i++){
+   		for(j=i+1;j<MAX;j++){
+   			if( daftarBarang[j].jumlah > daftarBarang[i].jumlah){
+   			Barang temp = daftarBarang[i];
+   			daftarBarang[i] = daftarBarang[j];
+   			daftarBarang[j] = temp;
+   		   }
+   	   }
+   	}
+   }
+   
+   void tampilkanRekapan (int *totalBayar, int *totalDiskon){
+   	int i, no = 1;
+   	int total = 0, diskon = 0;
+   	urutkanBarang();
+   	printf("Rekap Pesanan Barang\n");
+    printf("=======================================================================\n");
+    printf("|No.| Jumlah | Nama Barang     | Harga   | Total Harga   | Diskon     |\n");
+    printf("=======================================================================\n");
+    
+    for (i = 0; i < MAX; i++) {
+        if (daftarBarang[i].jumlah > 0) {
+            int totalHarga = daftarBarang[i].harga * daftarBarang[i].jumlah;
+            daftarBarang[i].diskon = hitungDiskon(daftarBarang[i].jumlah, daftarBarang[i].harga);
+            printf("| %d |   %2d   | %-16s| Rp.%4d | Rp.%10d | Rp.%7d |\n",
+                   no++, daftarBarang[i].jumlah, daftarBarang[i].nama,
+                   daftarBarang[i].harga, totalHarga, daftarBarang[i].diskon);
+            total += totalHarga;
+            diskon += daftarBarang[i].diskon;
+        }
+    }
+    
+    printf("=======================================================================\n");
+    printf("Total Harga  = Rp.%d,-\n", total);
+    printf("Total Diskon = Rp.%d,-\n", diskon);
+    *totalBayar = total - diskon;
+    *totalDiskon = diskon;
+    printf("Total Bayar  = Rp.%d,-\n", *totalBayar);
+   }
+   
+   void simpanStruk(int totalBayar, int totalDiskon, int uangBayar){
+   	char namaFile[30];
+   	time_t t = time(NULL);
+   	struct tm tm = *localtime(&t);
+   	sprintf(namaFile, "struk_%ld.txt", t);
+   	
+   	FILE *f = fopen(namaFile, "w");
+   
+   	const char *hari[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+    const char *bulan[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+   	
+    fprintf(f, "|=====================================================================|\n");
+    fprintf(f, "|                        Toko SKENSA                                 |\n");
+    fprintf(f, "|              Jl. HOS Cokroaminoto No. 84, Denpasar                 |\n");
+    fprintf(f, "|                            Bali                                    |\n");
+    fprintf(f, "|                    Telp : 0816285791                               |\n");
+    fprintf(f, "|                                                                    |\n");
+    fprintf(f, "| ID Struk : %ld                                              |\n", t);
+    fprintf(f, "|====================================================================|\n");
+    fprintf(f, "| Nama Barang               |  Harga      |  Total      | Diskon     |\n");
+    fprintf(f, "|===========================|=============|=============|============|\n");
+
+   int i;
+   for(i=0;i<MAX;i++){
+   	if (daftarBarang[i].jumlah > 0) {
+   		fprintf(f, "| %2dx %-21s | Rp.%8d | Rp.%8d | Rp.%7d | \n",
+		   daftarBarang[i].jumlah, 
+		   daftarBarang[i].nama,
+		   daftarBarang[i].harga,
+		   daftarBarang[i].jumlah * daftarBarang[i].harga,
+		   daftarBarang[i].diskon);
+   	}
+   }
+   
+   fprintf(f, "|====================================================================|\n");
+    fprintf(f, "| Total Harga  = Rp.%-7d                                          |\n", totalBayar + totalDiskon);
+    fprintf(f, "| Total Diskon = Rp.%-7d                                          |\n", totalDiskon);
+    fprintf(f, "| Tagihan      = Rp.%-7d                                          |\n", totalBayar);
+    fprintf(f, "| Pembayaran   = Rp.%-7d                                          |\n", uangBayar);
+    fprintf(f, "| Kembalian    = Rp.%-7d                                          |\n", uangBayar - totalBayar);
+    fprintf(f, "|                                                                    |\n");
+    fprintf(f, "| Waktu/Hari : %s %s %2d %02d:%02d:%02d %d                              |\n",
+      hari[tm.tm_wday],
+	  bulan[tm.tm_mon],
+	  tm.tm_mday,
+	  tm.tm_hour, tm.tm_min, tm.tm_sec,
+	  tm.tm_year);
+   fprintf(f, "|===================================================================|\n");
+   
+   fclose(f);
+   printf("Struktur berhasil di simpan sebagai %s\n", namaFile);
+}
+
+int main() {
+    int pilihan;
+
+    do {
+        clearScreen();
+        tampilanMenu();
+        printf("Input pilihan yang Anda inginkan: ");
+        scanf("%d", &pilihan);
+
+        if (pilihan >= 1 && pilihan <= 5) {
+            int qty;
+            printf("Masukkan jumlah %s: ", daftarBarang[pilihan - 1].nama);
+            scanf("%d", &qty);
+            daftarBarang[pilihan - 1].jumlah += qty;
+            printf("Barang berhasil ditambahkan.\n");
+            tekanEnterUntukLanjut();
+        } 
+        else if (pilihan == 55) {
+            resetPesanan();
+            tekanEnterUntukLanjut();
+        } 
+        else if (pilihan == 99) {
+            int totalBayar, totalDiskon, uangBayar;
+
+            clearScreen(); 
+            
+            tampilkanRekapan(&totalBayar, &totalDiskon);
+
+            do {
+                printf("Masukkan uang bayar = Rp.");
+                scanf("%d", &uangBayar);
+
+                if (uangBayar < totalBayar) {
+                    printf("Uang kurang! Silakan masukkan kembali.\n");
+                }
+            } while (uangBayar < totalBayar);
+
+            printf("Kembalian = Rp.%d\n", uangBayar - totalBayar);
+            simpanStruk(totalBayar, totalDiskon, uangBayar);
+            tekanEnterUntukLanjut();
+        } 
+        else if (pilihan == 0) {
+            printf("Terima kasih telah berbelanja!\n");
+        } 
+        else {
+            printf("Pilihan tidak valid!\n");
+            tekanEnterUntukLanjut();
+        }
+    } while (pilihan != 0);
+
+    return 0;
+}
