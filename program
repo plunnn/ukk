@@ -17,24 +17,24 @@ typedef struct {
    {"Pensil",2000,0,0},
    {"Penghapus",1000,0,0},
    {"penggaris",1000,0,0},
-   {"Bujur", 500,0,0}
+   {"Bujur Sangkar", 500,0,0}
    };
    
    void tampilanMenu(){
    	int i;
-   	printf("selamat datang di toko SKENSA \n");
-   	printf("silahkan pilih barang yang anda inginkan: \n");
-   	printf("=========================== \n");
-   	printf("|No.| Barang   | Harga    | \n");
-   	printf("=========================== \n");
+   	printf("Selamat datang di toko SKENSA \n");
+   	printf("Silahkan pilih barang yang anda inginkan: \n");
+   	printf("========================== \n");
+   	printf("|No.| Barang   | Harga   | \n");
+   	printf("========================== \n");
    	for(i=0;i<MAX;i++){
    		printf("|%d|%-14s|Rp.%4d| \n", i+1, daftarBarang[i].nama,daftarBarang[i].harga);
    	}
-   	printf("=========================== \n");
+   	printf("========================== \n");
    	printf("99. struk pembelian \n");
    	printf("55. reset pesanan \n");
    	printf("00. keluar \n");
-   	printf("=========================== \n");
+   	printf("========================== \n");
    }
    
    void resetPesanan(){
@@ -141,20 +141,20 @@ typedef struct {
    	}
    }
    
-   fprintf(f, "|====================================================================|\n");
+   fprintf(f, "|===================================================================|\n");
     fprintf(f, "| Total Harga  = Rp.%-7d                                          |\n", totalBayar + totalDiskon);
     fprintf(f, "| Total Diskon = Rp.%-7d                                          |\n", totalDiskon);
     fprintf(f, "| Tagihan      = Rp.%-7d                                          |\n", totalBayar);
     fprintf(f, "| Pembayaran   = Rp.%-7d                                          |\n", uangBayar);
     fprintf(f, "| Kembalian    = Rp.%-7d                                          |\n", uangBayar - totalBayar);
     fprintf(f, "|                                                                    |\n");
-    fprintf(f, "| Waktu/Hari : %s %s %2d %02d:%02d:%02d %d                              |\n",
+    fprintf(f, "| Waktu/Hari : %s %s %2d %02d:%02d:%02d %d                               |\n",
       hari[tm.tm_wday],
 	  bulan[tm.tm_mon],
 	  tm.tm_mday,
 	  tm.tm_hour, tm.tm_min, tm.tm_sec,
 	  tm.tm_year);
-   fprintf(f, "|===================================================================|\n");
+   fprintf(f, "|====================================================================|\n");
    
    fclose(f);
    printf("Struktur berhasil di simpan sebagai %s\n", namaFile);
