@@ -118,7 +118,7 @@ typedef struct {
    	const char *hari[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
     const char *bulan[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
    	
-    fprintf(f, "|=====================================================================|\n");
+    fprintf(f, "|====================================================================|\n");
     fprintf(f, "|                        Toko SKENSA                                 |\n");
     fprintf(f, "|              Jl. HOS Cokroaminoto No. 84, Denpasar                 |\n");
     fprintf(f, "|                            Bali                                    |\n");
@@ -141,19 +141,19 @@ typedef struct {
    	}
    }
    
-   fprintf(f, "|===================================================================|\n");
+    fprintf(f, "|====================================================================|\n");
     fprintf(f, "| Total Harga  = Rp.%-7d                                          |\n", totalBayar + totalDiskon);
     fprintf(f, "| Total Diskon = Rp.%-7d                                          |\n", totalDiskon);
     fprintf(f, "| Tagihan      = Rp.%-7d                                          |\n", totalBayar);
     fprintf(f, "| Pembayaran   = Rp.%-7d                                          |\n", uangBayar);
     fprintf(f, "| Kembalian    = Rp.%-7d                                          |\n", uangBayar - totalBayar);
     fprintf(f, "|                                                                    |\n");
-    fprintf(f, "| Waktu/Hari : %s %s %2d %02d:%02d:%02d %d                               |\n",
+    fprintf(f, "| Waktu/Hari : %s %s %2d %02d:%02d:%02d %d                              |\n",
       hari[tm.tm_wday],
 	  bulan[tm.tm_mon],
 	  tm.tm_mday,
 	  tm.tm_hour, tm.tm_min, tm.tm_sec,
-	  tm.tm_year);
+	  tm.tm_year + 1990);
    fprintf(f, "|====================================================================|\n");
    
    fclose(f);
